@@ -1,21 +1,45 @@
 package com.andretaveira.helpdesk.domain;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import com.andretaveira.helpdesk.domain.enums.Priority;
 import com.andretaveira.helpdesk.domain.enums.Status;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class Call {
+@Entity
+public class Call implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate createdAt = LocalDate.now();
+	
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate finishedAt;
 	private Priority priority;
 	private Status status;
 	private String title;
 	private String body;
+	
+	@ManyToOne
+	@JoinColumn(name = "operator_id")
 	private Operator operator;
+	
+	@ManyToOne
+	@JoinColumn(name = "client_id")
 	private Client client;
 	
 	public Call() {
