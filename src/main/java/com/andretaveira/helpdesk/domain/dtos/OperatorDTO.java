@@ -24,7 +24,7 @@ public class OperatorDTO implements Serializable {
 	protected LocalDate createdAt = LocalDate.now();
 
 	public OperatorDTO() {
-
+		addProfile(Profile.CLIENTE);
 	}
 
 	public OperatorDTO(Operator obj) {
@@ -35,6 +35,7 @@ public class OperatorDTO implements Serializable {
 		password = obj.getPassword();
 		profiles = obj.getProfiles().stream().map(p -> p.getCode()).collect(Collectors.toSet());
 		createdAt = obj.getCreatedAt();
+		addProfile(Profile.CLIENTE);
 	}
 
 	public Integer getId() {
