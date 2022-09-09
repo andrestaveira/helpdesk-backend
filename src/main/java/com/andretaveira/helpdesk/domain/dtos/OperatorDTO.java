@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.NotNull;
+
 import com.andretaveira.helpdesk.domain.Operator;
 import com.andretaveira.helpdesk.domain.enums.Profile;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -14,9 +16,17 @@ public class OperatorDTO implements Serializable {
 
 	protected static final long serialVersionUID = 1L;
 	protected Integer id;
+	
+	@NotNull(message = "O campo nome é obrigatório")
 	protected String name;
+	
+	@NotNull(message = "O campo CPF é obrigatório")
 	protected String cpf;
+	
+	@NotNull(message = "O campo e-mail é obrigatório")
 	protected String email;
+	
+	@NotNull(message = "O campo senha é obrigatório")
 	protected String password;
 	protected Set<Integer> profiles = new HashSet<>();
 
