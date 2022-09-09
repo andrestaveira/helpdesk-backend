@@ -3,6 +3,8 @@ package com.andretaveira.helpdesk.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,7 @@ public class OperatorService {
 
 	@Autowired
 	private OperatorRepository repository;
-	
+
 	@Autowired
 	private PersonRepository personRepository;
 
@@ -39,14 +41,22 @@ public class OperatorService {
 		return repository.save(obj);
 	}
 
+	public Operator update(Integer id, @Valid OperatorDTO objDto) {
+		objDto.setId(id);
+		Operator obj = findById(id);
+		validateCpfAndEmail(objDto);
+		obj = new Operator(objDto);
+		return repository.save(obj);
+	}
+
 	private void validateCpfAndEmail(OperatorDTO objDto) {
 		Optional<Person> obj = personRepository.findByCpf(objDto.getCpf());
-		if(obj.isPresent() && obj.get().getId() != objDto.getId()) {
+		if (obj.isPresent() && obj.get().getId() != objDto.getId()) {
 			throw new DataIntegrityViolationException("O CPF informado já existe");
 		}
-		
+
 		obj = personRepository.findByEmail(objDto.getEmail());
-		if(obj.isPresent() && obj.get().getId() != objDto.getId()) {
+		if (obj.isPresent() && obj.get().getId() != objDto.getId()) {
 			throw new DataIntegrityViolationException("O e-mail informado já existe");
 		}
 	}

@@ -16,6 +16,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import com.andretaveira.helpdesk.domain.enums.Profile;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -29,6 +31,7 @@ public abstract class Person implements Serializable {
 	protected Integer id;
 	protected String name;
 	
+	@CPF
 	@Column(unique = true)
 	protected String cpf;
 	
