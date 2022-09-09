@@ -3,6 +3,7 @@ package com.andretaveira.helpdesk.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,15 @@ public class OperatorService {
 		obj = new Operator(objDto);
 		return repository.save(obj);
 	}
+	
+	@Transactional
+	public void delete(Integer id) {
+		Operator obj = findById(id);
+		if(obj.getCalls().size() > 0) {
+			throw new DataIntegrityViolationException("O operador possui chamados vinculados e não pode ser deletado");
+		}
+		repository.deleteById(id);
+	}
 
 	private void validateCpfAndEmail(OperatorDTO objDto) {
 		Optional<Person> obj = personRepository.findByCpf(objDto.getCpf());
@@ -60,4 +70,6 @@ public class OperatorService {
 			throw new DataIntegrityViolationException("O e-mail informado já existe");
 		}
 	}
+
+	
 }
