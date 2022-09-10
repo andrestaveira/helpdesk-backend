@@ -9,61 +9,61 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.andretaveira.helpdesk.domain.Operator;
+import com.andretaveira.helpdesk.domain.Client;
 import com.andretaveira.helpdesk.domain.Person;
-import com.andretaveira.helpdesk.domain.dtos.OperatorDTO;
-import com.andretaveira.helpdesk.repositories.OperatorRepository;
+import com.andretaveira.helpdesk.domain.dtos.ClientDTO;
+import com.andretaveira.helpdesk.repositories.ClientRepository;
 import com.andretaveira.helpdesk.repositories.PersonRepository;
 import com.andretaveira.helpdesk.services.exceptions.DataIntegrityViolationException;
 import com.andretaveira.helpdesk.services.exceptions.ObjectNotFoundException;
 
 @Service
-public class OperatorService {
+public class ClientService {
 
 	@Autowired
-	private OperatorRepository repository;
+	private ClientRepository repository;
 
 	@Autowired
 	private PersonRepository personRepository;
 
 	@Transactional(readOnly = true)
-	public Operator findById(Integer id) {
-		Optional<Operator> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Operador não encontrado"));
+	public Client findById(Integer id) {
+		Optional<Client> obj = repository.findById(id);
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado"));
 	}
 
 	@Transactional(readOnly = true)
-	public List<Operator> findAll() {
+	public List<Client> findAll() {
 		return repository.findAll();
 	}
 
 	@Transactional
-	public Operator create(OperatorDTO objDto) {
+	public Client create(ClientDTO objDto) {
 		objDto.setId(null);
 		validateCpfAndEmail(objDto);
-		Operator obj = new Operator(objDto);
+		Client obj = new Client(objDto);
 		return repository.save(obj);
 	}
 
 	@Transactional
-	public Operator update(Integer id, @Valid OperatorDTO objDto) {
+	public Client update(Integer id, @Valid ClientDTO objDto) {
 		objDto.setId(id);
-		Operator obj = findById(id);
+		Client obj = findById(id);
 		validateCpfAndEmail(objDto);
-		obj = new Operator(objDto);
+		obj = new Client(objDto);
 		return repository.save(obj);
 	}
 
 	@Transactional
 	public void delete(Integer id) {
-		Operator obj = findById(id);
+		Client obj = findById(id);
 		if (obj.getCalls().size() > 0) {
-			throw new DataIntegrityViolationException("O operador possui chamados vinculados e não pode ser deletado");
+			throw new DataIntegrityViolationException("O cliente possui chamados vinculados e não pode ser deletado");
 		}
 		repository.deleteById(id);
 	}
 
-	private void validateCpfAndEmail(OperatorDTO objDto) {
+	private void validateCpfAndEmail(ClientDTO objDto) {
 		Optional<Person> obj = personRepository.findByCpf(objDto.getCpf());
 		if (obj.isPresent() && obj.get().getId() != objDto.getId()) {
 			throw new DataIntegrityViolationException("O CPF informado já existe");

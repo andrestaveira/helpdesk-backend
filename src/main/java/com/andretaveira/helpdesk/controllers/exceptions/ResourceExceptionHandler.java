@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,20 +35,11 @@ public class ResourceExceptionHandler {
 	public ResponseEntity<StandardError> validationError(MethodArgumentNotValidException e,
 			HttpServletRequest request) {
 		ValidationError errors = new ValidationError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
-				"Erro na validação dos campos", e.getMessage(), request.getRequestURI());
+				"Validation error", e.getMessage(), request.getRequestURI());
 
 		for (FieldError error : e.getBindingResult().getFieldErrors()) {
 			errors.addError(error.getField(), error.getDefaultMessage());
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 	}
-	
-	@ExceptionHandler(TransactionSystemException.class)
-	public ResponseEntity<StandardError> dataIntegrityViolationException(TransactionSystemException e,
-			HttpServletRequest request) {
-		StandardError error = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
-				"CPF inválido", e.getMessage(), request.getRequestURI());
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
-	}
-	
 }

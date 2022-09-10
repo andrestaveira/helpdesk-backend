@@ -10,11 +10,11 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import com.andretaveira.helpdesk.domain.Operator;
+import com.andretaveira.helpdesk.domain.Client;
 import com.andretaveira.helpdesk.domain.enums.Profile;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class OperatorDTO implements Serializable {
+public class ClientDTO implements Serializable {
 
 	protected static final long serialVersionUID = 1L;
 	protected Integer id;
@@ -36,11 +36,11 @@ public class OperatorDTO implements Serializable {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	protected LocalDate createdAt = LocalDate.now();
 
-	public OperatorDTO() {
+	public ClientDTO() {
 		addProfile(Profile.CLIENTE);
 	}
 
-	public OperatorDTO(Operator obj) {
+	public ClientDTO(Client obj) {
 		id = obj.getId();
 		name = obj.getName();
 		cpf = obj.getCpf();
