@@ -23,27 +23,27 @@ public class Call implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate createdAt = LocalDate.now();
-	
+
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate finishedAt;
 	private Priority priority;
 	private Status status;
 	private String title;
 	private String body;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "operator_id")
 	private Operator operator;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private Client client;
-	
+
 	public Call() {
-		
+
 	}
 
 	public Call(Integer id, Priority priority, Status status, String title, String body, Operator operator,
@@ -117,8 +117,16 @@ public class Call implements Serializable {
 		return createdAt;
 	}
 
+	public void setCreatedAt(LocalDate createdAt) {
+		this.createdAt = createdAt;
+	}
+
 	public LocalDate getFinishedAt() {
 		return finishedAt;
+	}
+
+	public void setFinishedAt(LocalDate finishedAt) {
+		this.finishedAt = finishedAt;
 	}
 
 	@Override

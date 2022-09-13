@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,11 +40,17 @@ public class CallController {
 		List<CallDTO> listDto = list.stream().map(obj -> new CallDTO(obj)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDto);
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<CallDTO> create(@Valid @RequestBody CallDTO objDto) {
 		Call obj = service.create(objDto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
+	}
+
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<CallDTO> update(@PathVariable Integer id, @Valid @RequestBody CallDTO objDto) {
+		Call obj = service.update(id, objDto);
+		return ResponseEntity.ok().body(new CallDTO(obj));
 	}
 }

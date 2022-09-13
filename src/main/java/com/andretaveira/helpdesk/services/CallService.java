@@ -1,5 +1,6 @@
 package com.andretaveira.helpdesk.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,7 @@ public class CallService {
 		return repository.findAll();
 	}
 
+	@Transactional
 	public Call create(@Valid CallDTO objDto) {
 		return repository.save(newCall(objDto));
 	}
@@ -52,6 +54,9 @@ public class CallService {
 		if (obj.getId() != null) {
 			call.setId(obj.getId());
 		}
+		if (obj.getStatus().equals(2)) {
+			call.setFinishedAt(LocalDate.now());
+		}
 		call.setOperator(operator);
 		call.setClient(client);
 		call.setPriority(Priority.toEnum(obj.getPriority()));
@@ -59,5 +64,13 @@ public class CallService {
 		call.setTitle(obj.getTitle());
 		call.setBody(obj.getBody());
 		return call;
+	}
+
+	@Transactional
+	public Call update(Integer id, @Valid CallDTO objDto) {
+		objDto.setId(id);
+		Call obj = findById(id);
+		obj = newCall(objDto);
+		return repository.save(obj);
 	}
 }
