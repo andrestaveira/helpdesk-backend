@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,9 @@ public class ClientService {
 
 	@Autowired
 	private PersonRepository personRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
 	public Client findById(Integer id) {
@@ -40,6 +44,7 @@ public class ClientService {
 	@Transactional
 	public Client create(ClientDTO objDto) {
 		objDto.setId(null);
+		objDto.setPassword(passwordEncoder.encode(objDto.getPassword()));
 		validateCpfAndEmail(objDto);
 		Client obj = new Client(objDto);
 		return repository.save(obj);

@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,9 @@ public class OperatorService {
 
 	@Autowired
 	private PersonRepository personRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
 	public Operator findById(Integer id) {
@@ -40,6 +44,7 @@ public class OperatorService {
 	@Transactional
 	public Operator create(OperatorDTO objDto) {
 		objDto.setId(null);
+		objDto.setPassword(passwordEncoder.encode(objDto.getPassword()));
 		validateCpfAndEmail(objDto);
 		Operator obj = new Operator(objDto);
 		return repository.save(obj);
