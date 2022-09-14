@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,7 @@ public class OperatorController {
 		return ResponseEntity.ok().body(listDto);
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<OperatorDTO> create(@Valid @RequestBody OperatorDTO objDto) {
 		Operator obj = service.create(objDto);
@@ -49,12 +51,14 @@ public class OperatorController {
 		return ResponseEntity.created(uri).build();
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<OperatorDTO> update(@PathVariable Integer id, @Valid @RequestBody OperatorDTO objDto) {
 		Operator obj = service.update(id, objDto);
 		return ResponseEntity.ok().body(new OperatorDTO(obj));
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<OperatorDTO> delete(@PathVariable Integer id) {
 		service.delete(id);
